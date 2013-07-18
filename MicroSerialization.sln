@@ -1,7 +1,31 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroSerialization.Mf", "MicroSerialization.Mf\MicroSerialization.Mf.csproj", "{DCC197B6-FB7B-4DFA-A218-2AE44128B2A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroSerialization.Pcl", "MicroSerialization.Pcl\MicroSerialization.Pcl.csproj", "{22C81444-BD4E-4D82-B81E-08908627D240}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroSerialization.Tests", "MicroSerialization.Tests\MicroSerialization.Tests.csproj", "{F3A40580-53F9-478F-8D86-10612E35A82B}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DCC197B6-FB7B-4DFA-A218-2AE44128B2A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCC197B6-FB7B-4DFA-A218-2AE44128B2A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCC197B6-FB7B-4DFA-A218-2AE44128B2A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCC197B6-FB7B-4DFA-A218-2AE44128B2A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22C81444-BD4E-4D82-B81E-08908627D240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22C81444-BD4E-4D82-B81E-08908627D240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22C81444-BD4E-4D82-B81E-08908627D240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22C81444-BD4E-4D82-B81E-08908627D240}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3A40580-53F9-478F-8D86-10612E35A82B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3A40580-53F9-478F-8D86-10612E35A82B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3A40580-53F9-478F-8D86-10612E35A82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3A40580-53F9-478F-8D86-10612E35A82B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
