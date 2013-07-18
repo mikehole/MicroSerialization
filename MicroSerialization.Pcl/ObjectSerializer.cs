@@ -11,14 +11,11 @@ namespace MicroSerialization.Pcl
     {
         private Stream _stream;
         
-        readonly StreamWriter _writer;
-
         List<byte[]> _objectBytes;
 
         public ObjectSerializer(Stream stream)
         {
             _stream = stream;
-            _writer = new StreamWriter(stream);
             _objectBytes = new List<byte[]>();
         }
         
@@ -36,14 +33,14 @@ namespace MicroSerialization.Pcl
             WriteTypeLength();
 
             WriteTypeData();
-
             _stream.Flush();
         }
 
         public void WriteTypeInfo()
         {
-            _writer.WriteLine(typeof(T).FullName);
-            _writer.Flush();
+
+            byte[] stringbyts = System.Text.UTF8Encoding.UTF8.GetBytes(typeof(T).FullName + "\0");
+            _stream.Write(stringbyts, 0, stringbyts.Length);
         }
 
         public void WriteTypeLength()

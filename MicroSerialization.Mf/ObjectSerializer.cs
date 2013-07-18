@@ -19,10 +19,10 @@ namespace MicroSerialization.Mf
 
             ConstructorInfo typeConstructor = Type.GetType(typeName).GetConstructor(x);
 
-            int lengthOfData = BitConverter.ToInt32(objectData, typnameByts.Length + 2);
+            int lengthOfData = BitConverter.ToInt32(objectData, typnameByts.Length + 1);
 
             //do a little check
-            if (typnameByts.Length + 2 + 4 + lengthOfData != objectData.Length)
+            if (typnameByts.Length + 1 + 4 + lengthOfData != objectData.Length)
                 return null;
 
             Int32 currentPos = objectData.Length - lengthOfData;
@@ -45,7 +45,7 @@ namespace MicroSerialization.Mf
 
         byte[] GetNextString(byte[] objectData, int offeset)
         {
-            int delimiter = Array.IndexOf(objectData, (byte)13);
+            int delimiter = Array.IndexOf(objectData, (byte)0);
 
             byte[] stringData = new byte[delimiter];
 
