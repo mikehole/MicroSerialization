@@ -25,9 +25,6 @@ namespace MicroSerialization.Agent.TestApp
 
             _serial.ReadTimeout = 500;
 
-            //Handle the DataReceived event when data is sent to the serial port.
-            _serial.DataReceived += _serial_DataReceived;
-
             _serial.Open();
 
             // initialize display buffer
@@ -38,46 +35,55 @@ namespace MicroSerialization.Agent.TestApp
             _display.DrawText("Ready :)", _fontNinaB, Color.White, 10, 64);
             _display.Flush();
 
-            // go to sleep; all further code should be timer-driven or event-driven
-            Thread.Sleep(Timeout.Infinite);
+            while (true)
+            {
+                if (_serial.BytesToRead > 0)
+                {
+                    GetAllBytes();
+                }
+            }
         }
 
-        static void _serial_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        private static byte[] GetAllBytes()
         {
-            //Read the length bytes.
-            byte[] dataLengthBytes = new byte[4];
-
-            _serial.Read(dataLengthBytes, 0, dataLengthBytes.Length);
-
-            var dataLength = BitConverter.ToInt32(dataLengthBytes, 0);
-
-            byte[] buffer = new byte[dataLength];
+            byte[] mybuffer = new byte[1024];
 
             int bytesRead = 0;
-          
-            while (bytesRead != dataLength)
-            {
-                int readValue = _serial.ReadByte();
 
-                buffer[bytesRead] = (byte) readValue;
-                bytesRead++;
+            while (_serial.BytesToRead > 0)
+            {
+                byte[] chunk = new byte[_serial.BytesToRead];
+
+                _serial.Read(chunk, 0, chunk.Length);
+
+                foreach (var b in chunk)
+                {
+                    mybuffer[bytesRead] = b;
+                    bytesRead++;
+                }
+
+                Thread.Sleep(500);
             }
 
             MicroSerialization.Mf.ObjectSerializer os = new MicroSerialization.Mf.ObjectSerializer();
 
-            object objectRecieved = os.LoadFromBytes(buffer);
+            object objectRecieved = os.LoadFromBytes(mybuffer);
 
             switch (objectRecieved.GetType().Name)
             {
                 case "TestMessage":
                     _display.Clear();
-                    
-                    if(((Model.TestMessage)objectRecieved).TestString != null)
-                        _display.DrawText(((Model.TestMessage)objectRecieved).TestString, _fontNinaB, Color.White, 10, 64);
+
+                    if (((Model.TestMessage)objectRecieved).TestString != null)
+                        _display.DrawText( bytesRead.ToString() + " - " +  ((Model.TestMessage)objectRecieved).TestString, _fontNinaB, Color.White, 10, 64);
+                    else
+                        _display.DrawText(bytesRead.ToString(), _fontNinaB, Color.White, 10, 64);
 
                     _display.Flush();
                     break;
             }
+
+            return mybuffer;
         }
     }
 }

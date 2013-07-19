@@ -10,16 +10,22 @@ namespace MicroSerialization.Pcl
     public class ObjectSerializer<T>
     {
         private Stream _stream;
+
+        private Stream _streamToWriteTo;
+
         
         List<byte[]> _objectBytes;
 
         public ObjectSerializer(Stream stream)
         {
-            _stream = stream;
+            _streamToWriteTo = stream;
+            
+            _stream = new MemoryStream();
+
             _objectBytes = new List<byte[]>();
         }
         
-        public void SaveToStream(T objectToSave)
+        public long SaveToStream(T objectToSave)
         {
             GetTypeInfo();
 
@@ -30,10 +36,22 @@ namespace MicroSerialization.Pcl
                 GetFieldBytes(field, objectToSave);
             }
 
-            WriteTypeLength();
+            //WriteTypeLength();
 
             WriteTypeData();
+
             _stream.Flush();
+
+            _stream.Seek(0, 0);
+
+            byte[] dataToSend = new byte[_stream.Length];
+
+            _stream.Read(dataToSend, 0, dataToSend.Length);
+
+            _streamToWriteTo.Write(dataToSend, 0, dataToSend.Length);
+            _streamToWriteTo.Flush();
+
+            return dataToSend.Length;
         }
 
         public void GetTypeInfo()

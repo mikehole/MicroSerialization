@@ -60,6 +60,13 @@
                 <TextBox x:Name="TxtText"/>
 
                 <Button x:Name="CmdSendStuff" Content="Send Stuff"  Tap="CmdSendStuff_OnTap" IsEnabled="False" />
+
+                
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="bytes sent:"  Margin="12,12,0,0"/>
+                    <TextBlock Text="0" x:Name="txtBytes" Margin="12,12,0,0"/>
+                </StackPanel>
+
             </StackPanel>
 
         </Grid>

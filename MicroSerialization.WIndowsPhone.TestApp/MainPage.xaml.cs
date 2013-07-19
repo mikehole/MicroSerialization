@@ -73,11 +73,13 @@ namespace MicroSerialization.WIndowsPhone.TestApp
 
             var objectSender = new MicroSerialization.Pcl.ObjectSerializer<TestMessage>(WindowsRuntimeStreamExtensions.AsStreamForWrite(_socket.OutputStream));
 
-            objectSender.SaveToStream(new TestMessage() 
+            var bytesSent = objectSender.SaveToStream(new TestMessage() 
             { 
                 TestInt = 1
                 , TestString = TxtText.Text
             });
+
+            txtBytes.Text = bytesSent.ToString();
 
         }
     }
