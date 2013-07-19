@@ -5,13 +5,9 @@ namespace MicroSerialization.Mf
 {
     public class ObjectSerializer
     {
-        private byte[] newline = new byte[] { 13, 10 };
-
         public object LoadFromBytes(byte[] objectData)
         {
-            int CurrentIndex = 0;
-
-            byte[] typnameByts = GetNextString(objectData, CurrentIndex);
+            byte[] typnameByts = GetNextString(objectData, 0);
 
             string typeName = new string(System.Text.UTF8Encoding.UTF8.GetChars(typnameByts));
 
@@ -19,13 +15,7 @@ namespace MicroSerialization.Mf
 
             ConstructorInfo typeConstructor = Type.GetType(typeName).GetConstructor(x);
 
-            int lengthOfData = BitConverter.ToInt32(objectData, typnameByts.Length + 1);
-
-            //do a little check
-            if (typnameByts.Length + 1 + 4 + lengthOfData != objectData.Length)
-                return null;
-
-            Int32 currentPos = objectData.Length - lengthOfData;
+            Int32 currentPos = typnameByts.Length + 1;
 
             object item = typeConstructor.Invoke(null);
 
@@ -89,11 +79,6 @@ namespace MicroSerialization.Mf
                     returnValue = BitConverter.ToBoolean(objectData, position);
                     movement = 1;
                     break;
-
-
-
-
-
 
                 case "String":
                     int EndIndex = Array.IndexOf(objectData, (byte)0, position);

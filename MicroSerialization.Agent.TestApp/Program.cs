@@ -5,6 +5,7 @@ using Microsoft.SPOT.Presentation;
 using Microsoft.SPOT.Presentation.Media;
 using System.Threading;
 using System.IO.Ports;
+using MicroSerialization.Mf;
 
 namespace MicroSerialization.Agent.TestApp
 {
@@ -21,6 +22,8 @@ namespace MicroSerialization.Agent.TestApp
             _fontNinaB = Resources.GetFont(Resources.FontResources.NinaB);
 
             _serial = new SerialPort("COM1");
+
+            _serial.ReadTimeout = 500;
 
             //Handle the DataReceived event when data is sent to the serial port.
             _serial.DataReceived += _serial_DataReceived;
@@ -41,12 +44,24 @@ namespace MicroSerialization.Agent.TestApp
 
         static void _serial_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (_serial.BytesToRead == 0) return;
-            
-            byte[] buffer = new byte[_serial.BytesToRead];
-            _serial.Read(buffer, 0, buffer.Length);
+            //Read the length bytes.
+            byte[] dataLengthBytes = new byte[4];
 
-            _serial.Flush();
+            _serial.Read(dataLengthBytes, 0, dataLengthBytes.Length);
+
+            var dataLength = BitConverter.ToInt32(dataLengthBytes, 0);
+
+            byte[] buffer = new byte[dataLength];
+
+            int bytesRead = 0;
+          
+            while (bytesRead != dataLength)
+            {
+                int readValue = _serial.ReadByte();
+
+                buffer[bytesRead] = (byte) readValue;
+                bytesRead++;
+            }
 
             MicroSerialization.Mf.ObjectSerializer os = new MicroSerialization.Mf.ObjectSerializer();
 
@@ -56,7 +71,10 @@ namespace MicroSerialization.Agent.TestApp
             {
                 case "TestMessage":
                     _display.Clear();
-                    _display.DrawText(((Model.TestMessage)objectRecieved).TestString, _fontNinaB, Color.White, 10, 64);
+                    
+                    if(((Model.TestMessage)objectRecieved).TestString != null)
+                        _display.DrawText(((Model.TestMessage)objectRecieved).TestString, _fontNinaB, Color.White, 10, 64);
+
                     _display.Flush();
                     break;
             }

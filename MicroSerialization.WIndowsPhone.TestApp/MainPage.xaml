@@ -52,7 +52,7 @@
                 <TextBlock Text="To run this example ensure you have the AgentExamples.BasicCommsAgentApp running in the Agent Emulator." TextWrapping="Wrap" Margin="12"/>
 
                 <TextBlock Text="Device to connect to:" Margin="12,12,0,0"/>
-                <TextBox x:Name="TxtDevice" Text="CASSANDRA"/>
+                <TextBox x:Name="TxtDevice" Text="MIKE"/>
 
                 <Button x:Name="CmdDoStuff" Content="Connect"  Tap="CmdDoStuff_OnTap" />
 

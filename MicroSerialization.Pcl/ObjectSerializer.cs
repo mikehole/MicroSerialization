@@ -21,7 +21,7 @@ namespace MicroSerialization.Pcl
         
         public void SaveToStream(T objectToSave)
         {
-            WriteTypeInfo();
+            GetTypeInfo();
 
             var fieldInfos = typeof(T).GetFields();
 
@@ -36,11 +36,10 @@ namespace MicroSerialization.Pcl
             _stream.Flush();
         }
 
-        public void WriteTypeInfo()
+        public void GetTypeInfo()
         {
-
             byte[] stringbyts = System.Text.UTF8Encoding.UTF8.GetBytes(typeof(T).FullName + "\0");
-            _stream.Write(stringbyts, 0, stringbyts.Length);
+            _objectBytes.Add(stringbyts);
         }
 
         public void WriteTypeLength()

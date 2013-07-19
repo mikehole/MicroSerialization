@@ -20,7 +20,7 @@ namespace MicroSerialization.WIndowsPhone.TestApp
     public partial class MainPage : PhoneApplicationPage
     {
         private StreamSocket _socket = null;
-
+        private PeerInformation _peer = null;
         // Constructor
         public MainPage()
         {
@@ -41,8 +41,8 @@ namespace MicroSerialization.WIndowsPhone.TestApp
                 return false;
             }
 
-            var peerInfo = devices.FirstOrDefault(c => c.DisplayName.Contains(TxtDevice.Text));
-            if (peerInfo == null)
+            _peer = devices.FirstOrDefault(c => c.DisplayName.Contains(TxtDevice.Text));
+            if (_peer == null)
             {
                 MessageBox.Show("No paired device");
                 await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings-bluetooth:"));
@@ -52,7 +52,7 @@ namespace MicroSerialization.WIndowsPhone.TestApp
             _socket = new StreamSocket();
 
             //"{00001101-0000-1000-8000-00805f9b34fb}" - is the GUID for the serial port service.
-            await _socket.ConnectAsync(peerInfo.HostName, "{00001101-0000-1000-8000-00805f9b34fb}");
+            await _socket.ConnectAsync(_peer.HostName, "{00001101-0000-1000-8000-00805f9b34fb}");
 
             return true;
         }
@@ -66,7 +66,7 @@ namespace MicroSerialization.WIndowsPhone.TestApp
             }
         }
 
-        private void CmdSendStuff_OnTap(object sender, System.Windows.Input.GestureEventArgs e)
+        private async void CmdSendStuff_OnTap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             //send the objet to the agent app with a trailing byte of zero st that the app knows it 
             //has all of the current data.
@@ -78,6 +78,7 @@ namespace MicroSerialization.WIndowsPhone.TestApp
                 TestInt = 1
                 , TestString = TxtText.Text
             });
+
         }
     }
 }
